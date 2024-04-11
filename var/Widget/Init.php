@@ -99,6 +99,7 @@ class Init extends Widget
         }
 
         /** 初始化路由器 */
+        // typecho_options 表中的 routingTable 保存着 路由表
         Router::setRoutes($options->routingTable);
 
         /** 初始化插件 */

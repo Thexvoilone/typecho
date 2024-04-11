@@ -131,25 +131,30 @@ abstract class Widget
         $request = null,
         $disableSandboxOrCallback = true
     ): Widget {
-        [$className] = explode('@', $alias);
-        $key = Common::nativeClassName($alias);
+        [$className] = explode('@', $alias); // 将以@为分隔符来分割字符串
+        $key = Common::nativeClassName($alias); // 获取原始类名
 
+        // 判断类名是否已放置到列表, 如果没有忽略
         if (isset(self::$widgetAlias[$className])) {
             $className = self::$widgetAlias[$className];
         }
 
+        //  目前无效
         $sandbox = false;
 
+        //  目前无效
         if ($disableSandboxOrCallback === false || is_callable($disableSandboxOrCallback)) {
             $sandbox = true;
             Request::getInstance()->beginSandbox(new Config($request));
             Response::getInstance()->beginSandbox();
         }
 
+        // 如果组件池未设置该类名的组件,则继续
         if ($sandbox || !isset(self::$widgetPool[$key])) {
             $requestObject = new WidgetRequest(Request::getInstance(), isset($request) ? new Config($request) : null);
             $responseObject = new WidgetResponse(Request::getInstance(), Response::getInstance());
 
+            // 尝试实例化对象并执行入口函数
             try {
                 $widget = new $className($requestObject, $responseObject, $params);
                 $widget->execute();
@@ -168,6 +173,7 @@ abstract class Widget
                 }
             }
 
+            // 将组件对象加入到组件池中
             self::$widgetPool[$key] = $widget;
         }
 
@@ -175,7 +181,9 @@ abstract class Widget
     }
 
     /**
+     * alloc 分配
      * alloc widget instance
+     *分配组件实例
      *
      * @param mixed $params
      * @param mixed $request
@@ -184,6 +192,7 @@ abstract class Widget
      */
     public static function alloc($params = null, $request = null, $disableSandboxOrCallback = true): Widget
     {
+        // static::class 或 self::class 获取当前类名
         return self::widget(static::class, $params, $request, $disableSandboxOrCallback);
     }
 

@@ -346,7 +346,6 @@ class Request
         } else {
             $pathInfo = '/';
         }
-
         // fix issue 456
         return ($this->pathInfo = '/' . ltrim(urldecode($pathInfo), '/'));
     }

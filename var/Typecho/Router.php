@@ -83,7 +83,8 @@ class Router
         foreach (self::$routingTable as $key => $route) {
             if (preg_match($route['regx'], $pathInfo, $matches)) {
                 self::$current = $key;
-
+                var_dump($route);
+                var_dump(self::$current);
                 try {
                     /** 载入参数 */
                     $params = null;
